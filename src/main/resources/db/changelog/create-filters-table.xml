@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="create-filters-table" author="changeset">
+        <sql splitStatements="false">
+        SET search_path = filters;
+
+        CREATE SEQUENCE filters_id_seq
+            INCREMENT 1
+              START 1;
+
+        CREATE TABLE filters
+        (
+            id             BIGINT                                             NOT NULL DEFAULT NEXTVAL('filters_id_seq'),
+            name           VARCHAR(30)                                        NOT NULL,
+            created_dtime  TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL
+        );
+
+        ALTER TABLE filters
+        ADD CONSTRAINT pk_filters_id
+            PRIMARY KEY (id);
+
+        GRANT SELECT, INSERT, UPDATE, DELETE ON filters TO db_owner;
+        GRANT ALL ON filters_id_seq TO db_owner;
+
+        ALTER TABLE filters
+            OWNER TO db_owner;
+        </sql>
+    </changeSet>
+
+    <changeSet id="add-test-data-to-filters-table" author="changeset">
+        <sql splitStatements="false">
+            SET search_path = filters;
+
+            INSERT INTO filters (name, created_dtime)
+                VALUES ('first', CURRENT_TIMESTAMP);
+            INSERT INTO filters (name, created_dtime)
+                VALUES ('second', CURRENT_TIMESTAMP);
+            INSERT INTO filters (name, created_dtime)
+                VALUES ('third', CURRENT_TIMESTAMP);
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

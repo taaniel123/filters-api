@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="create-criteria-table" author="changeset">
+        <sql splitStatements="false">
+        SET search_path = filters;
+
+        CREATE SEQUENCE criteria_id_seq
+            INCREMENT 1
+              START 1;
+
+        CREATE TABLE criteria
+        (
+            id            BIGINT      NOT NULL     DEFAULT NEXTVAL('criteria_id_seq'),
+            filter_id     BIGINT      NOT NULL,
+            type          VARCHAR(10) NOT NULL,
+            condition     VARCHAR(20) NOT NULL,
+            value_amount  NUMERIC(16, 2),
+            value_title   VARCHAR(30),
+            value_date    DATE,
+            created_dtime TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+            FOREIGN KEY (filter_id) REFERENCES filters(id) ON DELETE CASCADE
+        );
+
+        ALTER TABLE criteria
+        ADD CONSTRAINT pk_criteria_id
+            PRIMARY KEY (id);
+
+        GRANT SELECT, INSERT, UPDATE, DELETE ON criteria TO db_owner;
+        GRANT ALL ON criteria_id_seq TO db_owner;
+
+        ALTER TABLE criteria
+            OWNER TO db_owner;
+        </sql>
+    </changeSet>
+
+    <changeSet id="add-test-data-to-criteria-table" author="changeset">
+        <sql splitStatements="false">
+            SET search_path = filters;
+
+            INSERT INTO criteria (filter_id, type, condition, value_amount, value_title, value_date, created_dtime)
+                VALUES (1, 'Title', 'Starts with', null, 'Cat', null, CURRENT_TIMESTAMP);
+            INSERT INTO criteria (filter_id, type, condition, value_amount, value_title, value_date, created_dtime)
+                VALUES (2, 'Amount', 'Greater than', 60, null, null, CURRENT_TIMESTAMP);
+            INSERT INTO criteria (filter_id, type, condition, value_amount, value_title, value_date, created_dtime)
+                VALUES (3, 'Date', 'From', null, null, CURRENT_DATE, CURRENT_TIMESTAMP);
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

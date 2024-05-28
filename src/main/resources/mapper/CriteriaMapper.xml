@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="ee.levin.filters.dao.CriteriaDao">
+
+    <select id="findCriteriaByFilterId" resultType="ee.levin.filters.dto.CriteriaDto">
+        SELECT
+            id AS id,
+            filter_id AS filterId,
+            type AS type,
+            condition AS condition,
+            value_amount AS valueAmount,
+            value_title AS valueTitle,
+            value_date AS valueDate,
+            created_dtime AS createdDtime
+        FROM filters.criteria
+        WHERE filter_id = #{filterId};
+    </select>
+
+    <insert id="insertCriteria" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO filters.criteria
+            (filter_id, type, condition, value_amount, value_title, value_date)
+        VALUES
+            (#{filterId}, #{type}, #{condition}, #{valueAmount}, #{valueTitle}, #{valueDate})
+    </insert>
+</mapper>

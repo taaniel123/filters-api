@@ -1,0 +1,33 @@
+services:
+
+  app:
+    build:
+      context: .
+    container_name: filters
+    restart: on-failure:10
+    ports:
+      - "9900:9900"
+    depends_on:
+      - postgres
+    entrypoint:
+      - java
+      - -Dspring.liquibase.enabled=true
+      - -Dspring.liquibase.url=jdbc:postgresql://filters_postgres:5432/filters
+      - -Dspring.datasource.url=jdbc:postgresql://filters_postgres:5432/filters
+      - -jar
+      - /opt/filters.jar
+    networks:
+      - default
+
+  postgres:
+    image: postgres:14.1
+    container_name: filters_postgres
+    ports:
+      - "5431:5432"
+    environment:
+      POSTGRES_PASSWORD: root
+      POSTGRES_USER: root
+      POSTGRES_DB: filters
+      LANG: en_US.UTF-8
+    networks:
+      - default

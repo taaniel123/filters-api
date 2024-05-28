@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.7.xsd"
+                   logicalFilePath="changelog/baseline.xml">
+
+    <changeSet id="202405231000-setup" author="baseline">
+        <sql>
+            SET statement_timeout = 0;
+            SET lock_timeout = 0;
+            SET client_encoding = 'UTF8';
+            SET standard_conforming_strings = on;
+            SET check_function_bodies = false;
+            SET client_min_messages = warning;
+        </sql>
+        <sqlFile path="../sql/schema.sql" relativeToChangelogFile="true" endDelimiter="\n/\s*\n|\n/\s*$" />
+    </changeSet>
+
+    <changeSet id="202405231000-baseline" author="baseline">
+        <sql>
+            SET search_path = filters;
+        </sql>
+
+    </changeSet>
+
+</databaseChangeLog>
